@@ -7,5 +7,6 @@ namespace ParkRouting.Models
 {
     public class Parks
     {
+        List<Park> ParksListed { get; set; }
     }
 }

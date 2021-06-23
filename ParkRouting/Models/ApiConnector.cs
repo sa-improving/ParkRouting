@@ -13,6 +13,8 @@ namespace ParkRouting.Models
         private static readonly HttpClient _client = new HttpClient();
         public bool PrettyPrintJson { get; set; }
 
+
+
         private void PrettyPrint(string json)
         {
             var jobj = JObject.Parse(json);
@@ -23,7 +25,7 @@ namespace ParkRouting.Models
         {
             var response = _client.GetAsync(uri).Result;
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 string responseBody = response.Content.ReadAsStringAsync().Result;
                 if (PrettyPrintJson)
@@ -39,10 +41,31 @@ namespace ParkRouting.Models
             }
         }
 
-        public Park GetPark(string query)
+        public List<Park> GetParks(string query)
         {
-            var responseBody = GetResponseString(query);
-            return JsonConvert.DeserializeObject<Park>(responseBody);
+            var request = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
+            var data = JsonConvert.DeserializeObject<List<Park>>(request);
+            var parks = new List<Park>();
+            foreach (Park park in data)
+            {
+                if (park.Parkname.ToLower().Contains(query.ToLower()) || park.Description.ToLower().Contains(query.ToLower()))
+                {
+                    parks.Add(park);
+                }
+            }
+            return parks;
+        }
+
+        public List<Park> GetAllParks()
+        {
+            var request = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
+            var data = JsonConvert.DeserializeObject<List<Park>>(request);
+            var parks = new List<Park>();
+            foreach(Park park in data)
+            {
+                parks.Add(park);
+            }
+            return parks;
         }
     }
 }

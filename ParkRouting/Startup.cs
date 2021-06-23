@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ParkRouting.Models;
 
 namespace ParkRouting
 {
@@ -24,6 +25,7 @@ namespace ParkRouting
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSingleton<ApiConnector>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,8 +52,8 @@ namespace ParkRouting
             {
                 endpoints.MapControllerRoute(
                     name: "parkFilter",
-                    pattern: "parkdata/{query}",
-                    new { controller = "Park", action = "PopulatePark"});
+                    pattern: "parkdata",
+                    new { controller = "Park", action = "PopulateParks"});
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ParkRouting.Models;
+using ParkRouting.ViewModel;
 
 namespace ParkRouting.Controllers
 {
@@ -14,11 +15,19 @@ namespace ParkRouting.Controllers
         {
             _apiConnector = apiConnector;
         }
-        public IActionResult PopulatePark(string query)
+        
+        public IActionResult PopulateParks(string search)
         {
-            var park = _apiConnector.GetPark(query);
-            ViewBag.Park = park;
-            return View("ParkPage", ViewBag);
+            var vm = new ParksViewModel();
+            if (String.IsNullOrWhiteSpace(search))
+            {
+                vm.ParksListed = _apiConnector.GetAllParks();
+            }
+            else
+            {
+                vm.ParksListed = _apiConnector.GetParks(search);
+            }   
+            return View("ParkPage", vm);
         }
     }
 }
