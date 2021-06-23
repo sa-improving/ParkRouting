@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ParkRouting.Models
 {
-    public class apiData
+    public class Parks
     {
     }
 }

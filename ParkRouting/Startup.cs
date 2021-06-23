@@ -49,6 +49,10 @@ namespace ParkRouting
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "parkFilter",
+                    pattern: "parkdata/{query}",
+                    new { controller = "Park", action = "PopulatePark"});
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
