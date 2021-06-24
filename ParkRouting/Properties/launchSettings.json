@@ -10,7 +10,8 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
+        "launchBrowser": true,
+        "launchUrl": "parkdata",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

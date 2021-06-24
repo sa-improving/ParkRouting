@@ -61,7 +61,6 @@ namespace ParkRouting.Models
             if(!_cache.TryGetValue(CacheKey.Entry, out parks))
             {
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(5));
-
                 string request = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
                 parks = JsonConvert.DeserializeObject<List<Park>>(request);
 
