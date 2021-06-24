@@ -46,7 +46,7 @@ namespace ParkRouting.Models
             }
         }
 
-        public string checkCache()
+        public List<Park> checkCache()
         {
             string json;
             if(!_cache.TryGetValue(CacheKey.Entry, out json))
@@ -55,15 +55,14 @@ namespace ParkRouting.Models
                 json = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
                 _cache.Set(CacheKey.Entry, json, cacheEntryOptions);
             }
-            return json;
+            return JsonConvert.DeserializeObject<List<Park>>(json);
         }
 
 
 
         public List<Park> GetParks(string query)
         {
-            var request = checkCache();
-            var data = JsonConvert.DeserializeObject<List<Park>>(request);
+            var data = checkCache();
             var parks = new List<Park>();
             foreach (Park park in data)
             {
@@ -76,15 +75,8 @@ namespace ParkRouting.Models
         }
 
         public List<Park> GetAllParks()
-        {
-            var request = checkCache();
-            var data = JsonConvert.DeserializeObject<List<Park>>(request);
-            var parks = new List<Park>();
-            foreach(Park park in data)
-            {
-                parks.Add(park);
-            }
-            return parks;
+        {          
+            return checkCache();
         }
     }
 }

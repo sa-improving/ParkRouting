@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace ParkRouting.Models
 {
+    //https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-5.0
     public static class CacheKey
     {
         public static string Entry { get { return "_Entry"; } }
