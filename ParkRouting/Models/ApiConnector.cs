@@ -12,7 +12,7 @@ namespace ParkRouting.Models
     public class ApiConnector
     {
         private static readonly HttpClient _client = new HttpClient();
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
         public bool PrettyPrintJson { get; set; }
 
         public ApiConnector(IMemoryCache memoryCache)
@@ -46,30 +46,42 @@ namespace ParkRouting.Models
             }
         }
 
-        public List<Park> checkCache()
+        public List<Park> CheckCache()
         {
-            string json;
-            if(!_cache.TryGetValue(CacheKey.Entry, out json))
+            //string json;
+            //if(!_cache.TryGetValue(CacheKey.Entry, out json))
+            //{
+            //    var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(5));
+            //    json = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
+            //    _cache.Set(CacheKey.Entry, json, cacheEntryOptions);
+            //}
+            //return JsonConvert.DeserializeObject<List<Park>>(json);
+
+            List<Park> parks;
+            if(!_cache.TryGetValue(CacheKey.Entry, out parks))
             {
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(5));
-                json = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
-                _cache.Set(CacheKey.Entry, json, cacheEntryOptions);
+
+                string request = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
+                parks = JsonConvert.DeserializeObject<List<Park>>(request);
+
+                _cache.Set(CacheKey.Entry, parks, cacheEntryOptions);
             }
-            return JsonConvert.DeserializeObject<List<Park>>(json);
+            return parks;
         }
 
 
 
         public List<Park> GetParks(string query)
         {
-            var data = checkCache();
+            List<Park> data = CheckCache();
             data = data.Where(p => p.Parkname.ToLower().Contains(query.ToLower()) || p.Description.ToLower().Contains(query.ToLower())).ToList();
             return data;
         }
 
         public List<Park> GetAllParks()
         {          
-            return checkCache();
+            return CheckCache();
         }
     }
 }
