@@ -5,15 +5,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ParkRouting.Models
 {
     public class ApiConnector
     {
         private static readonly HttpClient _client = new HttpClient();
+        private IMemoryCache _cache;
         public bool PrettyPrintJson { get; set; }
 
-
+        public ApiConnector(IMemoryCache memoryCache)
+        {
+            _cache = memoryCache;
+        }
 
         private void PrettyPrint(string json)
         {
@@ -41,9 +46,23 @@ namespace ParkRouting.Models
             }
         }
 
+        public string checkCache()
+        {
+            string json;
+            if(!_cache.TryGetValue(CacheKey.Entry, out json))
+            {
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                json = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
+                _cache.Set(CacheKey.Entry, json, cacheEntryOptions);
+            }
+            return json;
+        }
+
+
+
         public List<Park> GetParks(string query)
         {
-            var request = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
+            var request = checkCache();
             var data = JsonConvert.DeserializeObject<List<Park>>(request);
             var parks = new List<Park>();
             foreach (Park park in data)
@@ -58,7 +77,7 @@ namespace ParkRouting.Models
 
         public List<Park> GetAllParks()
         {
-            var request = GetResponseString("https://seriouslyfundata.azurewebsites.net/api/parks");
+            var request = checkCache();
             var data = JsonConvert.DeserializeObject<List<Park>>(request);
             var parks = new List<Park>();
             foreach(Park park in data)
