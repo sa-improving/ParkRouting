@@ -63,15 +63,8 @@ namespace ParkRouting.Models
         public List<Park> GetParks(string query)
         {
             var data = checkCache();
-            var parks = new List<Park>();
-            foreach (Park park in data)
-            {
-                if (park.Parkname.ToLower().Contains(query.ToLower()) || park.Description.ToLower().Contains(query.ToLower()))
-                {
-                    parks.Add(park);
-                }
-            }
-            return parks;
+            data = data.Where(p => p.Parkname.ToLower().Contains(query.ToLower()) || p.Description.ToLower().Contains(query.ToLower())).ToList();
+            return data;
         }
 
         public List<Park> GetAllParks()
