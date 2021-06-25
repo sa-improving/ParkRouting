@@ -52,6 +52,14 @@ namespace ParkRouting
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "javascriptJson",
+                    pattern: "javascriptJson",
+                    new { controller = "Park", action = "JavascriptJson" });
+                endpoints.MapControllerRoute(
+                    name: "javaScriptParks",
+                    pattern: "javascriptparks",
+                    new { controller = "Park", action = "JavaScriptParks" });
+                endpoints.MapControllerRoute(
                     name: "parkFilter",
                     pattern: "parkdata",
                     new { controller = "Park", action = "PopulateParks"});

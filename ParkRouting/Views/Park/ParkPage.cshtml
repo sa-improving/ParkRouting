@@ -4,6 +4,9 @@
 @{
 }
 <h1>Parks</h1>
+<form action="/parkdata" method="get">
+    <input type="text" name="search" value="" />
+</form>
 <div>
     @foreach(var park in Model.ParksListed)
             {

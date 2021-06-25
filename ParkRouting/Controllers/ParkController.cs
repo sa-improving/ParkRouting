@@ -29,5 +29,22 @@ namespace ParkRouting.Controllers
             }   
             return View("ParkPage", vm);
         }
+
+        public IActionResult JavaScriptParks()
+        {
+            return View("Javascriptparks");
+        }
+
+        public IActionResult JavascriptJson(string search)
+        {
+            if(String.IsNullOrWhiteSpace(search))
+            {
+                return Json(_apiConnector.GetAllParks());
+            }
+            else
+            {
+                return Json(_apiConnector.GetParks(search));
+            }
+        }
     }
 }
